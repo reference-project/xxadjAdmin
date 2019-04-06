@@ -44,9 +44,10 @@
     </view>
 
 
-
+ 
   </view>
-      <view class='nav-list-name'>
+  <!--
+    <view class='nav-list-name'>
       姓名：
     </view>
       <view class='nav-list-phone'>
@@ -58,5 +59,6 @@
      <view class='nav-list-driving-years'>
       驾龄：
     </view>
-  </view>
+    -->
+  </view> 
 </view>
