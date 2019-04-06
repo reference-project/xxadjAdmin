@@ -1,0 +1,80 @@
+@keyframes icon-spin {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.iconfont-spin {
+  -webkit-animation: icon-spin 2s infinite linear;
+  animation: icon-spin 2s infinite linear;
+  display: inline-block;
+}
+
+.iconfont-pulse {
+  -webkit-animation: icon-spin 1s infinite steps(8);
+  animation: icon-spin 1s infinite steps(8);
+  display: inline-block;
+}
+
+@font-face {
+  font-family: 'iconfont';  /* project id 1127277 */
+  src: url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.eot');
+  src: url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family: iconfont !important;
+  font-size: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;}
+
+
+/* 收藏 */
+.icon-unie601:before{
+   content: "\e6cf";
+}
+/* 评论 */
+.icon-pinglun:before{
+   content: "\e6ad";
+}
+
+/* 右箭头 */
+.icon-jiantou3:before{
+   content: "\e634";
+}
+/*设置 */
+.icon-settings:before {
+  content: "\e632";
+}
+  /* 默认 */
+.icon-changjingmoren:before {
+  content: "\e629";
+}
+
+/* 关于 */
+.icon-guanyu:before {
+  content: "\e633";
+}
+/* 身份证 */
+.icon-spe_i:before {
+  content: "\e655";
+}

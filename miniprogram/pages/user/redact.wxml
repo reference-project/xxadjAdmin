@@ -1,0 +1,62 @@
+<view class="geren">
+  <view class='geren-view'></view>
+  <view class="nav-list-geren">
+    <view class='nav-list-geren1'>
+      <image class="geren-view-image" src='{{avatarUrl}}'></image>
+      <view class="geren-view-name" wx:if="{{userInfo!=false}}">{{userInfo.nickName}}</view>
+    </view>
+    <view class="list-box">
+    <view class="list-li list-arrow" catchtap='redact'>
+      <view class="list-text">
+        <view class="iconfont icon-changjingmoren moren-text"></view>
+         姓名：
+      </view>
+    </view>
+    <view class="list-li list-arrow" catchtap='redact'>
+      <view class="list-text">
+        <view class="iconfont icon-unie601 moren-text"></view>
+         电话：
+      </view>
+    </view>
+    <view class="list-li list-arrow" catchtap='redact'>
+      <view class="list-text">
+        <view class="iconfont icon-pinglun moren-text"></view>
+         年龄：
+      </view>
+    </view>
+        <view class="list-li list-arrow">
+      <view class="list-text">
+        <view class="iconfont icon-guanyu moren-text"></view>
+        驾龄：
+      </view>
+    </view>
+    <view class="list-li list-arrow"  catchtap='setting'>
+      <view class="list-text">
+        <view class="iconfont icon-spe_i moren-text"></view>
+         实名认证：
+      </view>
+    </view>
+    <view class="list-li list-arrow"  catchtap='setting'>
+      <view class="list-text">
+        <view class="iconfont icon-settings moren-text"></view>
+         驾驶认证：
+      </view>
+    </view>
+
+
+
+  </view>
+      <view class='nav-list-name'>
+      姓名：
+    </view>
+      <view class='nav-list-phone'>
+      电话：
+    </view>
+    <view class='nav-list-age'>
+      年龄：
+    </view>
+     <view class='nav-list-driving-years'>
+      驾龄：
+    </view>
+  </view>
+</view>
