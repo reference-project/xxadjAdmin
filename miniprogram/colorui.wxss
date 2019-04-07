@@ -854,7 +854,7 @@ overflow: hidden;
   position: relative;
   display: inline-flex;
   box-sizing: border-box;
-  padding: 10rpx 20rpx;
+  padding: 10rpx 10rpx;
   color: #fff;
   vertical-align: middle;
   font-size: 20rpx;
@@ -1594,6 +1594,26 @@ overflow: hidden;
   height: 30rpx;
   color: #aaa;
   content: "\e634";
+  text-align: center;
+  font-size: 34rpx;
+  font-family: iconfont !important;
+  line-height: 30rpx;
+}
+.list-xiugai {
+  padding-right: 35rpx;
+}
+
+.list-xiugai::after {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  bottom: 0;
+  display: block;
+  margin: auto;
+  width: 30rpx;
+  height: 30rpx;
+  color: #aaa;
+  content: "\e650";
   text-align: center;
   font-size: 34rpx;
   font-family: iconfont !important;

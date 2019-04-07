@@ -9,7 +9,7 @@
   display: block;
   position: relative;
   color: #666;
-  height: 1000rpx;
+  height: 1020rpx;
   padding: 20rpx;
   margin: 40rpx;
   /* 相对定位 */
@@ -38,4 +38,9 @@
   margin: 10rpx;
   font-size: 40rpx;
   width: 320rpx;
+}
+/* 确认提交按钮 */
+.modal-option-btn-button{
+  background-color: white;
+  color: forestgreen;
 }

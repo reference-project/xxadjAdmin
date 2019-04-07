@@ -24,12 +24,12 @@
 
 @font-face {
   font-family: 'iconfont';  /* project id 1127277 */
-  src: url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.eot');
-  src: url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.woff') format('woff'),
-  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_1127277_x223gvlnfmd.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.eot');
+  src: url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1127277_d6eul4hbghj.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -40,12 +40,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.iconfont{
-  font-family:"iconfont" !important;
-  font-size:16px;font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale;}
+
+/* 驾驶 */
+.icon-jiashi:before{
+   content: "\e60c";
+}
+/* 所在地 */
+.icon-suozaidi:before{
+   content: "\e6b5";
+}
+/* 驾龄 */
+.icon-jialing:before{
+   content: "\e60a";
+}
+
+/* 年龄 */
+.icon-age:before{
+   content: "\e7ba";
+}
+/* 电话 */
+.icon-phone:before{
+   content: "\e60f";
+}
+/* 姓名 */
+.icon-xingming:before{
+   content: "\e609";
+}
 
 
 /* 收藏 */
@@ -77,4 +97,7 @@
 /* 身份证 */
 .icon-spe_i:before {
   content: "\e655";
+}
+.icon-close:before{
+  content: "\e61d";
 }
