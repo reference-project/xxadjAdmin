@@ -1,0 +1,5 @@
+<!--pages/user/alterJiashi.wxml-->
+<text>pages/user/alterJiashi.wxml</text>
+
+<view>openid:{{openid}}</view>
+<view>ifJiashi:{{ifJiashi}}</view>

@@ -30,19 +30,21 @@
           驾龄：{{jialing}}
         </view>
       </view>
-      <view class="list-li list-xiugai" catchtap='alterSuozaidi' data-modal="modal" data-modal-name="修改所在地" data-modal-value="{{suozaidi}}" data-modal-title="suozaidi">
-        <view class="list-text">
-          <view class="iconfont icon-suozaidi moren-text"></view>
-          所在地：{{suozaidi}}
+      <picker mode="region" bindchange="alterSuozaidi" value="{{region}}" custom-item="{{customItem}}">
+        <view class="list-li list-xiugai"  data-modal="modal" data-modal-name="修改所在地" data-modal-value="{{suozaidi}}" data-modal-title="suozaidi">
+          <view class="list-text">
+            <view class="iconfont icon-suozaidi moren-text"></view>
+            所在地：{{region[0]}}，{{region[1]}}，{{region[2]}}
+          </view>
         </view>
-      </view>
-      <view class="list-li list-xiugai" catchtap='alterSpei' data-modal="modal" data-modal-name="实名认证" data-modal-value="{{spe_i}}">
+      </picker>
+      <view class="list-li list-xiugai" catchtap='alterSpei' data-modal-value="{{spe_i}}" data-openid='{{openid}}'>
         <view class="list-text">
           <view class="iconfont icon-spe_i moren-text"></view>
           实名认证：{{spe_i}}
         </view>
       </view>
-      <view class="list-li list-xiugai" catchtap='alterJiashi' data-modal="modal" data-modal-name="驾驶认证" data-modal-value="{{jiashi}}">
+      <view class="list-li list-xiugai" catchtap='alterJiashi'   data-modal-value="{{jiashi}}" data-openid='{{openid}}'>
         <view class="list-text">
           <view class="iconfont icon-jiashi moren-text"></view>
           驾驶认证：{{jiashi}}

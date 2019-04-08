@@ -1,4 +1,6 @@
 // pages/user/redact.js
+//获得数据库引用
+const db = wx.cloud.database();
 Page({
 
   /**
@@ -14,7 +16,9 @@ Page({
     suozaidi: '北京', //所在地
     spe_i: '未实名认证', //实名认证
     jiashi: '未驾驶认证', //驾驶认证
+    region: ['山东省', '枣庄市', '市中区'],
   },
+
   //打开弹出框
   showModal: function(e) {
     //获得模板显示
@@ -68,49 +72,66 @@ Page({
   },
   //修改姓名
   alterName: function(e) {
-    console.log("修改姓名被点击。。。。。。。。。。", e);
     //先判断是否实名，并打开修改框
     this.ifSpei(e)
   },
   //修改电话
   alterPhone: function(e) {
-    console.log("修改电话被点击。。。。。。。。。。", e);
     //先打开弹窗口
     this.showModal(e);
   },
   //修改年龄
   alterAge: function(e) {
-    console.log("修改年龄被点击。。。。。。。。。。", e);
     //先判断是否实名
     this.ifSpei(e);
   },
   //修改驾龄
   alterJialing: function(e) {
-    console.log("修改驾龄被点击。。。。。。。。。。", e);
     //先判断是否驾驶认证
     this.ifJiashi(e);
-
+   
   },
   //修改所在地
-  alterSuozaidi: function(e) {
+  alterSuozaidi(e) {
     console.log("修改所在地被点击。。。。。。。。。。", e);
-    //先打开弹窗口
-    this.showModal(e);
+    //更新到数据库
+    var thiss = this;
+    db.collection('user').doc(this.data.openid).update({
+      data: {
+        region: e.detail.value
+      },
+      success(res) {
+        //提示
+        wx.showToast({
+          title: "修改成功！",
+          icon: "none",
+          duration: 2000
+        })
+        //刷新
+        thiss.huodeshuju();
+      }
+    });
   },
+
   //修改实名认证
   alterSpei: function(e) {
-    console.log("修改实名认证被点击。。。。。。。。。。", e);
-    //先判断是否实名
-    this.ifSpei(e);
+    console.log('alterSpei', e)
+    //跳转编辑信息页面
+    wx.navigateTo({
+      url: 'alterSpei?openid=' + e.currentTarget.dataset.openid + '&ifSpei=' + e.currentTarget.dataset.modalValue,
+    })
   },
   //修改驾驶认证
   alterJiashi: function(e) {
-    console.log("修改驾驶认证被点击。。。。。。。。。。", e);
-    //先判断是否驾驶认证
-    this.ifJiashi(e);
+    console.log('alterJiashi',e)
+    //跳转编辑信息页面
+    wx.navigateTo({
+      url: 'alterJiashi?openid=' + e.currentTarget.dataset.openid + '&ifJiashi=' + e.currentTarget.dataset.modalValue,
+    })
   },
 
-  //更新到数据库
+
+  //更新
   updateAlter: function(e) {
     let modalTitle_ = e.detail.target.dataset.modalTitle;
     /**
@@ -126,15 +147,31 @@ Page({
           duration: 2000
         })
         return;
-      } 
+      }
       //当与原始ide数据相等时，不用更新数据库
       if (e.detail.value.name != this.data.modalValue) {
-        //更新到数据库
-        console.log("更新到数据库。。。。。。。。。。" + e.detail.value.name , e);
+        //更新数据
+        var thiss = this;
+        db.collection('user').doc(this.data.openid).update({
+          data: {
+
+            name: e.detail.value.name
+          },
+          success(res) {
+            //提示
+            wx.showToast({
+              title: "修改成功！",
+              icon: "none",
+              duration: 2000
+            })
+            //刷新
+            thiss.huodeshuju();
+          }
+        });
       }
 
     }
-    
+
     /**
      * 修改电话
      */
@@ -148,18 +185,33 @@ Page({
           duration: 2000
         })
         return;
-      } 
+      }
       //当与原始ide数据相等时，不用更新数据库
       if (e.detail.value.phone != this.data.modalValue) {
-        //更新到数据库
-        console.log("更新到数据库。。。。。。。。。。" + e.detail.value.phone, e);
+        //更新具体操作
+        var thiss = this;
+        db.collection('user').doc(this.data.openid).update({
+          data: {
+            phone: e.detail.value.phone
+          },
+          success(res) {
+            //提示
+            wx.showToast({
+              title: "修改成功！",
+              icon: "none",
+              duration: 2000
+            })
+            //刷新
+            thiss.huodeshuju();
+          }
+        });
       }
 
     }
 
     /**
-         * 修改年龄
-         */
+     * 修改年龄
+     */
     if (modalTitle_ == 'age') {
       //先判断用户是否填写完整
       if (e.detail.value.age == '') {
@@ -170,11 +222,26 @@ Page({
           duration: 2000
         })
         return;
-      } 
+      }
       //当与原始ide数据相等时，不用更新数据库
       if (e.detail.value.age != this.data.modalValue) {
         //更新到数据库
-        console.log("更新到数据库。。。。。。。。。。" + e.detail.value.age, e);
+        var thiss = this;
+        db.collection('user').doc(this.data.openid).update({
+          data: {
+            age: e.detail.value.age
+          },
+          success(res) {
+            //提示
+            wx.showToast({
+              title: "修改成功！",
+              icon: "none",
+              duration: 2000
+            })
+            //刷新
+            thiss.huodeshuju();
+          }
+        });
       }
 
     }
@@ -192,25 +259,40 @@ Page({
           duration: 2000
         })
         return;
-      } 
+      }
       //当与原始ide数据相等时，不用更新数据库
       if (e.detail.value.jialing != this.data.modalValue) {
         //更新到数据库
-        console.log("更新到数据库。。。。。。。。。。" + e.detail.value.jialing, e);
+        var thiss = this;
+        db.collection('user').doc(this.data.openid).update({
+          data: {
+            jialing: e.detail.value.jialing
+          },
+          success(res) {
+            //提示
+            wx.showToast({
+              title: "修改成功！",
+              icon: "none",
+              duration: 2000
+            })
+            //刷新
+            thiss.huodeshuju();
+          }
+        });
       }
 
     }
 
-   
-   
-   
-   
-   
+
+
+
+
+
     //关闭修改框
     this.closeModal();
     //加载更新提示框
     this.setData({
-      showLoading:true
+      showLoading: true
     })
     //然后从新加载数据,关闭提示框
     this.setData({
@@ -222,6 +304,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    this.setData({
+      openid: options.openid
+    })
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -238,12 +323,34 @@ Page({
         }
       }
     })
+    this.huodeshuju(); //获得数据
+
+  },
+  huodeshuju: function(e) {
+    var thiss = this;
+    //查询数据
+    db.collection('user').doc(this.data.openid).get({
+      success(res) {
+        // res.data 包含该记录的数据
+        thiss.setData({
+          name: res.data.name, //姓名
+          phone: res.data.phone, //电话
+          age: res.data.age, //年龄
+          jialing: res.data.jialing, //驾龄
+          suozaidi: res.data.suozaidi, //所在地
+          spe_i: res.data.spe_i, //实名认证
+          jiashi: res.data.jiashi, //驾驶认证
+          region: res.data.region, //所在地
+        })
+      }
+    })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
+
 
   },
 

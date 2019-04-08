@@ -1,4 +1,6 @@
 // pages/user/user.js
+//获得数据库引用
+const db = wx.cloud.database();
 Page({
 
   /**
@@ -12,7 +14,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function(options) {
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -23,79 +25,134 @@ Page({
               this.setData({
                 avatarUrl: res.userInfo.avatarUrl,
                 userInfo: res.userInfo
-              })
+              });
+
+
             }
           })
         }
       }
     })
+    //执行云涵数，获得openid作为id
+    wx.cloud.callFunction({
+      name: 'login',
+      complete: (res) => {
+        this.setData({
+          isopenid: res.result.openid,
+        })
+      }
+    })
+
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-    
+  onReady: function() {
+   
   },
   //登录授权
-  onGetUserInfo: function (e) {
+  onGetUserInfo: function(e) {
+    var thiss = this;
     if (!this.logged && e.detail.userInfo) {
       this.setData({
         logged: true,
         avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo
       })
+      //登录成功后，向数据库里面添加一个表，表示用户信息
+      db.collection('user').add({
+        // data 字段表示需新增的 JSON 数据
+        data: {
+          _id: '' + e.target.dataset.openid,
+          name: '' + this.data.userInfo.nickName, //默认
+          phone: '17863273072', //电话
+          age: '0', //年龄
+          jialing: '0', //驾龄
+          suozaidi: '北京', //所在地
+          spe_i: '未实名认证', //实名认证
+          jiashi: '未驾驶认证', //驾驶认证
+          region: ['山东省', '枣庄市', '市中区'],
+        },
+        success(res) {
+          // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
+          console.log("插入成功", res)
+        }
+      })
+
+
     }
   },
   // 点击设置
-  setting:function() {
-   
+  setting: function() {
+
   },
-  //编辑信息
-  redact:function(){
-    //跳转编辑信息页面
-    wx.navigateTo({
-      url: 'redact'
-    })
+
+  //判断是否登录
+  ifLongin: function(e) {
+    if (this.data.userInfo != '') {
+      return true;
+    } else {
+      return false;
+    }
+
+  },
+  //详细信息
+  redact: function(e) {
+    //先判断是否登录
+    if (this.ifLongin(e)) {
+      //跳转编辑信息页面
+      wx.navigateTo({
+      
+        url: 'redact?openid=' + e.currentTarget.dataset.openid,
+      })
+    } else {
+      wx.showToast({
+        title: "请先登录！",
+        icon: "none",
+        duration: 2000
+      });
+      return;
+    }
+
   },
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-  },
+  onShow: function() {},
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload: function() {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom: function() {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
 
   }
 })

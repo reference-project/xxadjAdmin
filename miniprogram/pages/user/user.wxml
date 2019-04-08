@@ -2,12 +2,12 @@
   <view class='geren-view'></view>
   <view class="nav-list-geren">
     <image class="geren-view-image" src='{{avatarUrl}}'></image>
-    <button open-type="getUserInfo" wx:if="{{userInfo==''}}" bindgetuserinfo="onGetUserInfo">登录授权</button>
+    <button open-type="getUserInfo" wx:if="{{userInfo==''}}" bindgetuserinfo="onGetUserInfo" data-openid='{{isopenid}}'>登录授权</button>
     <view class="geren-view-name" wx:if="{{userInfo!=false}}">{{userInfo.nickName}}</view>
 
   </view>
   <view class="list-box">
-    <view class="list-li list-arrow" catchtap='redact'>
+    <view class="list-li list-arrow" catchtap='redact' data-openid='{{isopenid}}'>
       <view class="list-text">
         <view class="iconfont icon-changjingmoren moren-text"></view>
         详细信息
