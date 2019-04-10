@@ -104,7 +104,7 @@ Page({
       //跳转编辑信息页面
       wx.navigateTo({
       
-        url: 'redact?openid=' + e.currentTarget.dataset.openid,
+        url: 'redact/redact?openid=' + e.currentTarget.dataset.openid,
       })
     } else {
       wx.showToast({

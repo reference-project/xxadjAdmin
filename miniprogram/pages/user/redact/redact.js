@@ -115,18 +115,16 @@ Page({
 
   //修改实名认证
   alterSpei: function(e) {
-    console.log('alterSpei', e)
     //跳转编辑信息页面
     wx.navigateTo({
-      url: 'alterSpei?openid=' + e.currentTarget.dataset.openid + '&ifSpei=' + e.currentTarget.dataset.modalValue,
+      url: 'alterSpei/alterSpei?openid=' + e.currentTarget.dataset.openid + '&ifSpei=' + e.currentTarget.dataset.modalValue,
     })
   },
   //修改驾驶认证
   alterJiashi: function(e) {
-    console.log('alterJiashi',e)
     //跳转编辑信息页面
     wx.navigateTo({
-      url: 'alterJiashi?openid=' + e.currentTarget.dataset.openid + '&ifJiashi=' + e.currentTarget.dataset.modalValue,
+      url: 'alterJiashi/alterJiashi?openid=' + e.currentTarget.dataset.openid + '&ifJiashi=' + e.currentTarget.dataset.modalValue,
     })
   },
 

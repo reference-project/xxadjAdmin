@@ -1,4 +1,0 @@
-<!--pages/user/alterSpei.wxml-->
-<text>pages/user/alterSpei.wxml</text>
-<view>openid:{{openid}}</view>
-<view>ifSpei:{{ifSpei}}</view>
