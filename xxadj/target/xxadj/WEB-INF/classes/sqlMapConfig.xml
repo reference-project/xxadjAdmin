@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+<!--全局setting 更具需要添加-->
+
+<!--设置别名-->
+<typeAliases>
+	<package name="cn.bubbletg.xxadj.po"/>
+</typeAliases>
+
+<!-- 
+
+配置mapper
+
+由于使用spring和mybatis 整合包进行mapper 扫描，这里不需要配置 -->
+
+
+</configuration>
