@@ -15,6 +15,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    /**
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -33,6 +34,7 @@ Page({
         }
       }
     })
+     */
     //执行云涵数，获得openid作为id
     wx.cloud.callFunction({
       name: 'login',
@@ -60,28 +62,27 @@ Page({
         avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo
       })
-      //登录成功后，向数据库里面添加一个表，表示用户信息
-      db.collection('user').add({
-        // data 字段表示需新增的 JSON 数据
-        data: {
-          _id: '' + e.target.dataset.openid,
-          name: '' + this.data.userInfo.nickName, //默认
-          phone: '17863273072', //电话
-          age: '0', //年龄
-          jialing: '0', //驾龄
-          suozaidi: '北京', //所在地
-          spe_i: '未实名认证', //实名认证
-          jiashi: '未驾驶认证', //驾驶认证
-          region: ['山东省', '枣庄市', '市中区'],
-        },
-        success(res) {
-          // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
-          console.log("插入成功", res)
-        }
-      })
-
-
+    
     }
+    //登录成功后，向数据库里面添加一个表，表示用户信息
+    db.collection('user').add({
+      // data 字段表示需新增的 JSON 数据
+      data: {
+        _id: '' + e.target.dataset.openid,
+        name: '' + this.data.userInfo.nickName, //默认
+        phone: '17863273072', //电话
+        age: '0', //年龄
+        jialing: '0', //驾龄
+        suozaidi: '北京', //所在地
+        spe_i: '未实名认证', //实名认证
+        jiashi: '未驾驶认证', //驾驶认证
+        region: ['山东省', '枣庄市', '市中区'],
+      },
+      success(res) {
+        // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
+        console.log("插入成功", res)
+      }
+    })
   },
   // 点击设置
   setting: function() {
