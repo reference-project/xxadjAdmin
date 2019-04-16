@@ -11,6 +11,7 @@ Page({
     userInfo: '',
   },
 
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -51,7 +52,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-   
+
   },
   //登录授权
   onGetUserInfo: function(e) {
@@ -62,7 +63,7 @@ Page({
         avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo
       })
-    
+
     }
     //登录成功后，向数据库里面添加一个表，表示用户信息
     db.collection('user').add({
@@ -104,7 +105,7 @@ Page({
     if (this.ifLongin(e)) {
       //跳转编辑信息页面
       wx.navigateTo({
-      
+
         url: 'redact/redact?openid=' + e.currentTarget.dataset.openid,
       })
     } else {

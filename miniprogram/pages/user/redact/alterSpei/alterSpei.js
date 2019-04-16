@@ -1,21 +1,21 @@
 const db = wx.cloud.database();
+const app = getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    show: 'noshow', //不显示
     shenfenzhengtupian: ['../../../../images/shangchuan.png', '../../../../images/shangchuan.png'], //身份证图片
 
   },
   //点击选择从哪里选择图片
-  chooseImage: function (shenfenzheng) {
+  chooseImage: function(shenfenzheng) {
     let _this = this;
     wx.showActionSheet({ //参考  https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showActionSheet.html?search-key=%20wx.showActionSheet
       itemList: ['从相册中选择', '拍照'],
       itemColor: "#f7982a",
-      success: function (res) {
+      success: function(res) {
         if (!res.cancel) {
           if (res.tapIndex == 0) { //tapIndex 获得 点击的按钮顺序
             _this.chooseWxImage('album', shenfenzheng) //设置不同的参数触发下面函数
@@ -26,20 +26,20 @@ Page({
       }
     })
   },
-  chooseWxImage: function (type, shenfenzheng) {
+  chooseWxImage: function(type, shenfenzheng) {
     let _this = this;
     wx.chooseImage({ //从本地相册选择图片或使用相机拍照。
       sizeType: ['original', 'compressed'],
       sourceType: [type], //从chooseImage 里获得点击是哪一个
-      success: function (res) {
+      success: function(res) {
         //返回保存 tempFilePaths		图片的本地文件路径列表
         let fan = 0;
         if (shenfenzheng == 0) {
           _this.data.shenfenzhengtupian[0] = res.tempFilePaths;
-          fan = 0;   //正面
+          fan = 0; //正面
         } else {
           _this.data.shenfenzhengtupian[1] = res.tempFilePaths;
-          fan = 1;   //反面
+          fan = 1; //反面
 
         }
         _this.setData({
@@ -47,7 +47,7 @@ Page({
         })
         //上传图片
         wx.uploadFile({
-          url: 'https://xxadj.bubbletg.cn/shenfengzheng', // 仅为示例，非真实的接口地址
+          url: app.globalData.url +'shenfengzheng',
           filePath: _this.data.shenfenzhengtupian[fan][0],
           name: 'pictureFile',
           formData: {
@@ -66,11 +66,16 @@ Page({
             if (data.length > 1) {
               //上传成功，
               _this.setData({
-                xingming: data[0],   //姓名
+                xingming: data[0], //姓名
                 shenfengzhenghao: data[1], //身份证号
                 chusheng: data[2], //身份证号
                 shangchuangzhengmianchengguo: 1, //识别并保存成功为1，失败为0
               })
+              wx.showToast({
+                title: "现在上传到验证吧",
+                icon: "none",
+                duration: 2000
+              });
               console.log(data)
             }
 
@@ -95,7 +100,7 @@ Page({
    * 4.返回保存路径
    * 5.返回参数
    */
-  shangchuanzhengmian: function (e) {
+  shangchuanzhengmian: function(e) {
     // shenfenzheng = 0 表示身份证正面
     this.chooseImage(0);
   },
@@ -107,7 +112,7 @@ Page({
    * 3.保存
    * 4.返回保存路径
    */
-  shangchuanfanmian: function (e) {
+  shangchuanfanmian: function(e) {
     // shenfenzheng = 1 表示身份证反面
     this.chooseImage(1);
     //
@@ -122,7 +127,7 @@ Page({
    * 把上传到服务器图片返回的路径，保存到表单，
    * 再把图片上传云存储保存起来
    */
-  shenfenzhengtijiao: function (e) {
+  shenfenzhengtijiao: function(e) {
     //判断是否上传证件照
     if (this.data.shenfenzhengtupian[0] == '../../../../images/shangchuan.png') {
       wx.showToast({
@@ -143,54 +148,61 @@ Page({
     this.setData({
       showLoading: true,
     })
-    //上传证件
-    for (let i = 0; i < 2; i++) {
-      var kl = this.data.shenfenzhengtupian[i][0].length //取保存图片地址的长度
-      //把图片上传到云存储
-      wx.cloud.uploadFile({
-        cloudPath: 'shenfenzheng/' + this.data.shenfenzhengtupian[i][0].substring(kl - 51, kl), // 上传至云端的路径
-        filePath: this.data.shenfenzhengtupian[i][0], // 小程序临时文件路径
-        //证件上传到云存储成功
-        success: res => {
-          // 返回文件 ID
-          console.log(res.fileID)
-          //判断识别上传是否成功 ,正面与反面相等时成功
-          if (this.data.shangchuangzhengmianchengguo == this.data.shangchuangfanmianchengguo) {
+    //判断识别上传是否成功 ,正面与反面相等时成功
+    if (this.data.shangchuangzhengmianchengguo == 1 && 1 == this.data.shangchuangfanmianchengguo) {
+      //上传证件
+      for (let i = 0; i < 2; i++) {
+        var kl = this.data.shenfenzhengtupian[i][0].length //取保存图片地址的长度
+        //把图片上传到云存储
+        wx.cloud.uploadFile({
+          cloudPath: 'shenfenzheng/' + this.data.shenfenzhengtupian[i][0].substring(kl - 51, kl), // 上传至云端的路径
+          filePath: this.data.shenfenzhengtupian[i][0], // 小程序临时文件路径
+          //证件上传到云存储成功
+          success: res => {
+            // 返回文件 ID
+            console.log(res.fileID)
+
             // 切换界面
             this.setData({
               shenfenzhengtijiao: 0, // 为0 隐藏
               showxinxi: 1, // 为1 显示
               showLoading: false, //关闭上传显示加载
             })
-          } else {
+
+
+          },
+          //证件上传到云存储失败
+          fail: res => {
             wx.showToast({
-              title: "证件出错误了，请从新选择证件上传",
+              title: "正在后台验证图片是否合格！请稍等片刻",
               icon: "none",
               duration: 2000
             });
+            this.setData({
+              showLoading: false, //关闭上传显示加载
+            })
             return;
           }
+        })
+      }
 
-        },
-        //证件上传到云存储失败
-        fail: res => {
-          wx.showToast({
-            title: "上传出错了！请从新上传",
-            icon: "none",
-            duration: 2000
-          });
-          this.setData({
-            showLoading: false, //关闭上传显示加载
-          })
-          return;
-        }
+    } else {
+      wx.showToast({
+        title: "网络出问题了呢！请稍等片刻",
+        icon: "none",
+        duration: 2000
+      });
+      this.setData({
+        showLoading: false, //关闭上传显示加载
       })
+      return;
+      return;
     }
   },
   /**
    * 重新上传
    */
-  chongxinchangchuan: function () {
+  chongxinchangchuan: function() {
     this.setData({
       shenfenzhengtijiao: 1, // 为0 隐藏
       showxinxi: 0, // 为1 显示
@@ -199,8 +211,8 @@ Page({
   /**
    * 确认提交
    */
-  shenfensubmitForm: function (e) {
- 
+  shenfensubmitForm: function(e) {
+
     this.setData({
       showLoading1: true,
     })
@@ -212,7 +224,7 @@ Page({
     db.collection('shiming').add({
       // data 字段表示需新增的 JSON 数据
       data: {
-        _id: '' + thiss.data.shenfengzhenghao + thiss.data.openid,
+        _id: '' + thiss.data.openid,
         xingming: '' + e.detail.value.xingming, //姓名
         shenfengzhenghao: e.detail.value.shenfengzhenghao, //证件号
         spe_i: '已实名认证', //实名认证
@@ -229,13 +241,13 @@ Page({
         spe_i: '已实名认证', //实名认证
         name: e.detail.value.xingming, //姓名
         //获得今年年份，减去出生年份 ，年龄
-        age: ((new Date().getFullYear())-(thiss.data.chusheng.substring(0,4))), 
+        age: ((new Date().getFullYear()) - (thiss.data.chusheng.substring(0, 4))),
       },
       success(res) {
         thiss.setData({
           ifusergengxing: 1,
         })
-       
+
       },
       fail(res) {
         //提示
@@ -271,7 +283,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function(options) {
     this.setData({
       openid: options.openid,
       ifSpei: options.ifSpei
@@ -282,49 +294,49 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload: function() {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom: function() {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
 
   }
 })

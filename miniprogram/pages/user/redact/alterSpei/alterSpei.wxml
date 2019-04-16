@@ -28,7 +28,7 @@
         </view>
       </view>
       <view class="doc-main">
-        <view class='btn success block lg' catchtap='shenfenzhengtijiao'> 上传
+        <view class='btn success block lg' catchtap='shenfenzhengtijiao' data-scfmcg='{{shangchuangzhengmianchengguo}}' > 上传
         </view>
       </view>
     </view>

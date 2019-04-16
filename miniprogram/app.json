@@ -1,9 +1,9 @@
 {
   "pages": [
-   
+    
     "pages/user/user",
     "pages/user/redact/alterSpei/alterSpei",
-    "pages/user/redact/alterJiashi/alterJiashi",
+   "pages/user/redact/alterJiashi/alterJiashi",
     "pages/user/redact/redact",
     "pages/index/index",
     "pages/add/add"

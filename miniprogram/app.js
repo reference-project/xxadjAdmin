@@ -10,6 +10,9 @@ App({
       })
     }
 
-    this.globalData = {}
+    this.globalData = {
+      //url: "http://localhost:8080/xxadj/",
+      url: "https://xxadj.bubbletg.cn/"
+      }
   }
 })
