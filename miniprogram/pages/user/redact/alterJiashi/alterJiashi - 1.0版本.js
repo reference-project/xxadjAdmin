@@ -37,7 +37,6 @@ Page({
         if (jiashizheng == 0) {
           _this.data.jiashizhengtupian[0] = res.tempFilePaths;
           fan = 0; //正面
-          
         } else {
           _this.data.jiashizhengtupian[1] = res.tempFilePaths;
           fan = 1; //反面

@@ -317,6 +317,13 @@ Page({
     this.setData({
       openid: options.openid
     })
+    //显示加载
+   
+      wx.showLoading({
+        title: '加载中...',
+        icon: 'loading',
+      })
+    
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -328,6 +335,8 @@ Page({
                 avatarUrl: res.userInfo.avatarUrl,
                 userInfo: res.userInfo
               })
+              //关闭加载...
+              wx.hideLoading()
             }
           })
         }

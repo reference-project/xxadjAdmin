@@ -31,13 +31,6 @@ Page({
       }
     });
 
-    //
-    wx.cloud.callFunction({
-      name: 'login',
-      complete: res => {
-        console.log('云函数: ', res)
-      }
-    })
   },
 
   /**
