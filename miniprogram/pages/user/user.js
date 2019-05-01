@@ -16,6 +16,37 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    var that = this;
+    /**
+     * 获得缓存 dengluchenggong 
+     * 值为 ture  表示登录
+     * 值为 false  表示没有登录
+     */
+    wx.getStorage({
+      key: 'dengluchenggong',
+      success(res) {
+        if (res.data == 'ture') {
+          console.log("user----------dengluchenggong 登录");
+          wx.getUserInfo({
+            success(res) {
+              that.setData({
+                ifdengluchenggong: 1,
+                avatarUrl: res.userInfo.avatarUrl,
+                userInfo: res.userInfo,
+              })
+            }
+          })
+        }
+      },
+      /**
+      * 没有缓存，表示获取失败，则没有登录过
+      */
+      fail(res) {
+        if (res.data != 'ture') {
+          console.log("user----------dengluchenggong 没有登录")
+        }
+      }
+    })
     //执行云涵数，获得openid作为id
     wx.cloud.callFunction({
       name: 'login',
@@ -36,17 +67,22 @@ Page({
   },
   //登录授权
   onGetUserInfo: function(e) {
-    console.log("---点击登录授权---",e)
+    console.log("---点击登录授权---", e)
     var thiss = this;
     if (!this.logged && e.detail.userInfo) {
       this.setData({
         logged: true,
         avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo,
-        openid:e.target.dataset.openid,
+        openid: e.target.dataset.openid,
       })
-
     }
+  //登录成功后通过缓存来设置登录成功标记
+    wx.setStorage({
+      key: 'dengluchenggong',
+      data: 'ture',
+    })
+
     //登录成功后，向数据库里面添加一个表，表示用户信息
     db.collection('user').add({
       // data 字段表示需新增的 JSON 数据
@@ -69,7 +105,8 @@ Page({
   },
   // 点击设置
   setting: function() {
-
+    console.log("---------------setting")
+    wx.openSetting()
   },
 
   //判断是否登录
@@ -81,14 +118,20 @@ Page({
     }
 
   },
-  //详细信息
-  redact: function(e) {
-    //先判断是否登录
-    if (this.ifLongin(e)) {
+  //cutInterface 切换界面
+  cutInterface: function(e) {
+    var interfaceZ = '' + e.currentTarget.dataset.interface; //要切换的页面
+    var openidZ = '' + e.currentTarget.dataset.openid; //获得openid
+    console.log(interfaceZ)
+    //先判断是否登录，当是设置，或者关于我们时，则不用判断
+    if (interfaceZ == 'setting') {
+      return;
+    } else if (interfaceZ == 'regard') {
+      return;
+    } else if (this.ifLongin(e)) {
       //跳转编辑信息页面
       wx.navigateTo({
-
-        url: 'redact/redact?openid=' + e.currentTarget.dataset.openid,
+        url: interfaceZ + '/' + interfaceZ + '?openid=' + openidZ,
       })
     } else {
       wx.showToast({
@@ -98,7 +141,6 @@ Page({
       });
       return;
     }
-
   },
   /**
    * 生命周期函数--监听页面显示

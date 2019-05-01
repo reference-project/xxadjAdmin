@@ -314,18 +314,56 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    let that = this;
+    //判断用户是否把授权关闭了
+    wx.getSetting({
+      success(res) {
+        console.log(res.authSetting)
+        //没有授权
+        if(!res.authSetting['scope.userInfo']){
+          //关闭加载...
+          wx.hideLoading();
+          //用户关闭授权
+          wx.showModal({
+            title: '是否需要打开设置页面',
+            content: '你也取消获得用户信息，是否打开设置页面进行授权',
+            confirmText: '确定',
+            cancelText: '取消',
+            success(res) {
+              console.log(res)
+              //表示点击了取消
+              if (res.confirm == false) {
+                //关闭当前页面
+                wx.navigateBack();
+              } else {
+                wx.openSetting({
+                  success(res) {
+                    if(res.authSetting['scope.userInfo']){
+                      that.huodeshuju(); //获得数据
+                    }
+                  }
+                })
+              }
+            }
+          })
+        }
+      }
+    })
+  
+    //获得传递过来的 openid
     this.setData({
       openid: options.openid
+    })  
+ 
+  },
+  huodeshuju: function(e) {
+     //显示加载
+     wx.showLoading({
+      title: '加载中',
+      icon: 'loading',
     })
-    //显示加载
-   
-      wx.showLoading({
-        title: '加载中...',
-        icon: 'loading',
-      })
-    
-    // 获取用户信息
-    wx.getSetting({
+     // 获取用户信息
+     wx.getSetting({
       success: res => {
         if (res.authSetting['scope.userInfo']) {
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
@@ -342,10 +380,6 @@ Page({
         }
       }
     })
-    this.huodeshuju(); //获得数据
-
-  },
-  huodeshuju: function(e) {
     var thiss = this;
     //查询数据
     db.collection('user').doc(this.data.openid).get({
@@ -378,6 +412,9 @@ Page({
    */
   onShow: function() {
 
+    this.huodeshuju(); //获得数据
+  
+   
   },
 
   /**

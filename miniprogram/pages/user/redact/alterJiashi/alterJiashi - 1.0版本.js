@@ -210,7 +210,6 @@ Page({
         zhunjiachexing: e.detail.value.zhunjiachexing, //准驾车型
         jiashi: '已驾驶认证', //驾驶认证
         jiashizhengtupian: thiss.data.jiashizhengtupian,
-
       },
       success(res) {
         thiss.setData({

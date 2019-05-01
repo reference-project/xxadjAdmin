@@ -16,7 +16,7 @@ Page({
    * fan 参数表示正反面
    */
   uploadFileZ: function(res, _this, fan) {
-    var kl = res.tempFilePaths.length //取保存图片地址的长度
+    var kl = _this.data.shenfenzhengtupian[fan][0].length //取保存图片地址的长度
     //把图片上传到云存储
     wx.cloud.uploadFile({
       cloudPath: 'shenfenzheng/' + _this.data.shenfenzhengtupian[fan][0].substring(kl - 51, kl), // 上传至云端的路径
@@ -42,7 +42,7 @@ Page({
         }
         wx.showToast({
           title: tit,
-          image: "shibai.png",
+          image: "../../../../images/shibai.png",
           duration: 2000
         });
       }
@@ -238,7 +238,7 @@ Page({
       if (thiss.data.shenfenzhengtijiao != 0 && thiss.data.showxinxi != 1) {
         wx.showToast({
           title: "图片验证失败,请重新上传",
-          image: "shibai.png",
+          image: "../../../../images/shibai.png",
           duration: 2000
         });
         thiss.setData({
@@ -328,7 +328,7 @@ Page({
         showLoading1: false,
       })
       //关闭当前页面返回
-      wx.redirectTo({
+      wx.navigateBack({
         url: '../redact?openid=' + thiss.data.openid,
       })
     }
@@ -355,7 +355,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-
     this.setData({
       openid: options.openid,
       ifSpei: options.ifSpei
@@ -373,7 +372,7 @@ Page({
           //表示点击了取消
           if (res.confirm == false) {
             //关闭当前页面返回
-            wx.redirectTo({
+            wx.navigateBack({
               url: '../redact?openid=' + that.data.openid,
             })
           }
@@ -382,6 +381,7 @@ Page({
     }
 
   },
+
 
 
 

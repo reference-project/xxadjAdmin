@@ -87,7 +87,6 @@ Page({
       baochefuwu: baochefuwu,
     })
   },
-
   /**
    * 获得位置方法
    * ifqishi 判断起始位置调用还是终点位置调用
@@ -120,29 +119,6 @@ Page({
             }
           }
         })
-      },
-      fail(res) {
-        wx.showModal({
-          title: '是否需要打开设置页面',
-          content: '你也取消授权位置，是否打开设置页面进行授权',
-          confirmText: '确定',
-          cancelText: '取消',
-          success(res) {
-            console.log(res)
-            //表示点击了取消
-            if (res.confirm == false) {
-              return;
-            } else {
-              wx.openSetting({
-                success(res) {
-                  if (res.authSetting['scope.userLocation']) {
-                    thiss.huodeweizhi();
-                  }
-                }
-              })
-            }
-          }
-        })
       }
     });
   },
@@ -153,7 +129,7 @@ Page({
   },
   //点击终点位置图标
   zhongdianweizhitap: function (e) {
-    this.huodeweizhi('zhongdianwei');
+    this.huodeweizhi('zhongdianweizhi');
   },
 
 
@@ -236,7 +212,7 @@ Page({
 
   },
 
-  //按钮立即下单
+  //按钮立即下单  即更新按钮
   lijixiadan: function (e) {
     //验证
     if (!this.verify(e)) {
@@ -260,15 +236,14 @@ Page({
     }
     let t = new Date(); //获得时间
     //向daijiadingdan表中添加信息
-    db.collection("daijiadingdan").add({
+    db.collection("daijiadingdan").doc(this.data.daijiadingdanDetail._id).update({
       // data 字段表示需新增的 JSON 数据
       data: {
-        _id: t,
         qishiweizhi: e.detail.value.qishiweizhi, //起始位置
         zhongdianweizhi: e.detail.value.zhongdianweizhi, //终点位置
         phone: e.detail.value.phone, //联系方式
         time: e.detail.value.time, //预约时间
-        tianjiadaijia: '' + tianjiadaijia, //添加代驾
+        tianjiadaijia: tianjiadaijia, //添加代驾
         baochefuwu: '' + baochefuwu, //包车服务
         baoshidaijia: '' + baoshidaijia, //包时代驾
         qishiweizhilatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
@@ -280,16 +255,18 @@ Page({
       },
       success(res) {
         //表示下单成功，把id保存到
-        console.log("下单成功", res)
+        console.log("更新成功", res)
         wx.showToast({
-          title: "下单成功！",
+          title: "更新成功！",
           icon: "none",
           duration: 2000
         });
+        //返回上一层页面
+        wx.navigateBack();
       }, fail(res) {
-        console.log("下单失败", res)
+        console.log("更新失败", res)
         wx.showToast({
-          title: "下单失败！",
+          title: "更新失败！",
           icon: "none",
           duration: 2000
         });
@@ -301,16 +278,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    //执行云涵数，获得openid作为id
-    wx.cloud.callFunction({
-      name: 'login',
-      complete: (res) => {
-        this.setData({
-          isopenid: res.result.openid,
-        })
-        //获取用户信息
-        this.huodeshuju();
-      }
+    //提示加载数据
+    wx.showLoading({
+      title: '加载中',
+    })
+    console.log("-----------------修改订单", options.detailId)
+    //获得传递过来的 detail
+    this.setData({
+      detailId: options.detailId
     })
   },
 
@@ -346,86 +321,112 @@ Page({
    */
   onShow: function () {
 
-    /**
-     * 先判断用户是否登录，没有则让用户登录
-     * 获得缓存 dengluchenggong 
-     * 值为 ture  表示登录
-     * 值为 false  表示没有登录
-     */
-    wx.getStorage({
-      key: 'dengluchenggong',
-      success(res) {
-        if (res.data == 'ture') {
-          console.log("add -------------已经登录")
-        }
-      },
+    //获得数据
+    this.daijiadingdan();
 
+  },
+  //获得数据
+  daijiadingdan: function () {
+    db.collection('daijiadingdan').doc(this.data.detailId).get().then(res => {
+      // res.data 包含该记录的数据
+      this.setData({
+        daijiadingdanDetail: res.data,
+      })
       /**
-       * 没有缓存，表示获取失败，则没有登录过
+       * 把订单信息显示在订单添加页面
+       * 在这里防止异步
        */
-      fail(res) {
-        if (res.data != 'ture') {
-          console.log("add -------------没有登录")
-          wx.showModal({
-            title: '请登录',
-            content: '您好还没有登录，请先登录再操作！',
-            confirmText: '确定',
-            cancelText: '取消',
-            success(res) {
-              console.log(res)
-              //表示点击了取消
-              if (res.confirm == false) {
-                //关闭当前页面返回主界面
-                wx.switchTab({
-                  url: '../index/index',
-                })
-              } else {
-                //点击确认时,跳转到登录界面
-                wx.switchTab({
-                  url: '../user/user',
-                })
-              }
-            }
-          })
-        }
-      }
+      this.dingdanxianshi();
+      //得到数据，关闭加载
+      wx.hideLoading();
     })
-
-
   },
-
   /**
-   * 生命周期函数--监听页面隐藏
+   * 订单显示，把数据库获得的数据显示在表单里面
    */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
+  dingdanxianshi: function () {
+    //优先判断是包时订单，包车订单，还是普通订单
+    if (this.data.daijiadingdanDetail.baoshidaijia != 'undefined') {
+      this.setData({
+        baoshidaijia: 'cur',
+        baochefuwu: '',
+        richangdaijia: '',
+      })
+    } else if (this.data.daijiadingdanDetail.baochefuwu != 'undefined') {
+      this.setData({
+        baoshidaijia: '',
+        baochefuwu: 'cur',
+        richangdaijia: '',
+      })
+    } else {
+      this.setData({
+        baoshidaijia: '',
+        baochefuwu: '',
+        richangdaijia: 'cur',
+      })
+    }
+    ///////////////////////////////////////////////////////////////////////
+    //判断时间  time	:	2019年-12月-31日 23:59
+    var time_t = this.data.daijiadingdanDetail.time;
+    //获得年份
+    let year = time_t.substring(0, 4);
+    if (year == 2019) {
+      year = 0;  //获得下标
+    } else if (year == 2020) {
+      year = 1;  //获得下标
+    } else if (year == 2021) {
+      year = 2;  //获得下标
+    }
+    //判断多少为代驾
+    var tianjiadaijia_ = this.data.daijiadingdanDetail.tianjiadaijia;
+    console.log('')
+    if(tianjiadaijia_=='undefined'){
+      tianjiadaijia_ = 1;
+    }
+    var baoshi = this.data.daijiadingdanDetail.baoshidaijia;
+    if (baoshi == '请选择包时时间' || baoshi == "undefined") {
+      baoshi = 0;
+    } else if (baoshi == '4小时') {
+      baoshi = 1;
+    } else if (baoshi == '1天') {
+      baoshi = 2;
+    } else if (baoshi == '2天') {
+      baoshi = 3;
+    } else if (baoshi == '3天') {
+      baoshi = 4;
+    } else if (baoshi == '4天') {
+      baoshi = 5;
+    } else if (baoshi == '5天') {
+      baoshi = 6;
+    } else if (baoshi == '10天') {
+      baoshi = 7;
+    }
+  
+    var baochefuwu_ = this.data.daijiadingdanDetail.baochefuwu;
+    if (baochefuwu_ == '选择包车的类型' || baochefuwu_ == "undefined") {
+      baochefuwu_ = 0;
+    } else if (baochefuwu_ == '经济型小轿车') {
+      baochefuwu_ = 1;
+    } else if (baochefuwu_ == '舒适型小轿车') {
+      baochefuwu_ = 2;
+    } else if (baochefuwu_ == '豪华型小轿车') {
+      baochefuwu_ = 3;
+    } else if (baochefuwu_ == '商务车') {
+      baochefuwu_ = 4;
+    } else if (baochefuwu_ == '婚礼用车') {
+      baochefuwu_ = 5;
+    }
+    console.log('-----包时---------',baoshi);
+    this.setData({
+      qishiweizhisuozaidi: this.data.daijiadingdanDetail.qishiweizhi, //起始位置
+      zhongdianweizhisuozaidi: this.data.daijiadingdanDetail.zhongdianweizhi,//终点位置
+      phone: this.data.daijiadingdanDetail.phone,//电话
+      multiIndex: [year, (time_t.substring(6, 8) - 1), (time_t.substring(10, 12) - 1),
+        parseInt(time_t.substring(14, 16)), parseInt(time_t.substring(17, 19))],//时间
+      daijiarenIndex: parseInt(tianjiadaijia_) - 1, //代驾人数
+      baoshiIndex: parseInt(baoshi),
+      baocheIndex: parseInt(baochefuwu_),
+    })
 
   }
 })
